@@ -1,0 +1,67 @@
+@startuml
+
+class FileType {
+  +CSV : String
+  +XML : String
+  +JSON : String
+}
+
+interface FileParser {
+  +parse(File file)
+}
+
+class CsvFileParser {
+  +parse(File file)
+}
+
+class JsonFileParser {
+  +parse(File file)
+}
+
+class XmlFileParser {
+  +parse(File file)
+}
+
+class FileParserFactory {
+  -fileParsers : Map<String, FileParser>
+  +get(String fileType) : FileParser
+}
+
+class FileParserService {
+  -fileParserFactory : FileParserFactory
+  +parse(File file, String fileType)
+}
+
+FileParser <|.. CsvFileParser
+FileParser <|.. JsonFileParser
+FileParser <|.. XmlFileParser
+
+FileParserFactory o-- FileParser
+
+FileParserService o-- FileParserFactory
+
+
+note left of FileType
+  Defines constants for
+  different file types.
+end note
+
+note right of FileParser
+  Interface for file parsing. i.e. strategy
+end note
+
+note right of FileParserFactory
+  Selects appropriate parser
+  implementation based on file type.
+end note
+
+note right of FileParserService
+  Uses FileParserFactory to get the appropriate FileParser
+  based of fileType and parses the file.
+end note
+
+note left of CsvFileParser
+  Concrete Strategies
+end note
+
+@enduml
